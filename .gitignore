@@ -7,3 +7,4 @@ data
 slurm_logs
 *.pyc
 *.onnx
+*.DS_Store
