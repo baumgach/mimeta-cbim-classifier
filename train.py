@@ -10,9 +10,7 @@ from model import ResNet18Classifier
 import argparse
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Script for training model."
-    )
+    parser = argparse.ArgumentParser(description="Script for training model.")
     parser.add_argument(
         "--experiment_name",
         type=str,
@@ -21,8 +19,8 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--use_data_augmentation",
-        action='store_true',
-        help="Training uses data augmentation if enabled."
+        action="store_true",
+        help="Training uses data augmentation if enabled.",
     )
 
     args = parser.parse_args()
@@ -70,12 +68,15 @@ if __name__ == "__main__":
     if args.use_data_augmentation:
         experiment_name += "-with-aug"
 
-    logger = TensorBoardLogger(save_dir="./runs", name=experiment_name, default_hp_metric=False)
+    logger = TensorBoardLogger(
+        save_dir="./runs", name=experiment_name, default_hp_metric=False
+    )
 
     checkpoint_callbacks = [
         ModelCheckpoint(
             monitor="valid/auc_epoch",
             filename="best-auc-{epoch}-{step}",
+            mode="max",
         ),
     ]
 
@@ -83,7 +84,7 @@ if __name__ == "__main__":
     num_classes = dataset.task_target.value
     model = ResNet18Classifier(num_classes=num_classes)
     trainer = pl.Trainer(
-        max_epochs=100,
+        max_epochs=10000,
         log_every_n_steps=10,
         val_check_interval=0.25,
         logger=logger,
