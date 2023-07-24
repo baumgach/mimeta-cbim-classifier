@@ -24,7 +24,7 @@ conda activate pytorch
 
 # Run our code
 echo "-------- PYTHON OUTPUT ----------"
-python train.py --name="cbim" --use_data_augmentation
+python train.py --experiment_name="cbim" --use_data_augmentation
 python test.py --checkpoints_dir="runs/cbim-with-aug/version_0/checkpoints" 
 echo "---------------------------------"
 
