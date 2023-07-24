@@ -1,0 +1,9 @@
+__pycache__
+.mypy_cache
+.pytest_cache
+.vscode
+runs
+data
+slurm_logs
+*.pyc
+*.onnx
