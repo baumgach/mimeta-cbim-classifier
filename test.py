@@ -63,10 +63,7 @@ if __name__ == "__main__":
     test_loader = DataLoader(test_dataset, batch_size=32)
 
     model = ResNet18Classifier.load_from_checkpoint(
-        total_levels=7,
-        latent_levels=5,
         num_classes=2,
-        zdim=2,
         checkpoint_path=latest_checkpoint,
     )
 
