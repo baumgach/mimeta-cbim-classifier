@@ -24,11 +24,19 @@ if __name__ == "__main__":
         help="Path to directory containing the checkpoint files. The most recent checkpoint will be loaded.",
         required=True,
     )
+    parser.add_argument(
+        "--checkpoint_identifier",
+        type=str,
+        help="Filter by checkpoint identifier such aus 'auc' or 'loss'",
+        default=None,
+    )
 
     args = parser.parse_args()
 
     checkpoint_dir = args.checkpoints_dir
     checkpoints = [f for f in os.listdir(checkpoint_dir) if f.endswith(".ckpt")]
+    if args.checkpoint_identifier is not None:
+        checkpoints = [f for f in checkpoints if args.checkpoint_identifier in f]
 
     # Sort the checkpoints by epoch number
     checkpoints.sort(key=lambda x: int(x.split("=")[1].split("-")[0]))
