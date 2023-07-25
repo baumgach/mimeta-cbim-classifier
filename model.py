@@ -92,15 +92,15 @@ class ResNet18Classifier(pl.LightningModule):
         self.test_outputs.append(torch.argmax(logits, dim=1))
         self.test_labels.append(torch.argmax(y, dim=1))
 
-    # def on_test_epoch_end(self):
-    #     all_preds = torch.cat(self.test_outputs)
-    #     all_labels = torch.cat(self.test_labels)
+    def on_test_epoch_end(self):
+        all_preds = torch.cat(self.test_outputs)
+        all_labels = torch.cat(self.test_labels)
 
-    #     test_confusion_matrix = torchmetrics.classification.BinaryConfusionMatrix()
-    #     bcm = test_confusion_matrix(all_preds, all_labels)
+        test_confusion_matrix = torchmetrics.classification.BinaryConfusionMatrix().to(device=self.device)
+        bcm = test_confusion_matrix(all_preds, all_labels)
 
-    #     print("Confusion Matrix:")
-    #     print(bcm)
+        print("Confusion Matrix:")
+        print(bcm)
 
     def configure_optimizers(self):
         optimizer = optim.Adam(
