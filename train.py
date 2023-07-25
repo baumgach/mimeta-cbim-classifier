@@ -22,6 +22,18 @@ if __name__ == "__main__":
         action="store_true",
         help="Training uses data augmentation if enabled.",
     )
+    parser.add_argument(
+        "--weight_decay",
+        type=float,
+        help="Strength of weight-decay term; 0 means no weight decay.",
+        default=0.0,
+    )
+    parser.add_argument(
+        "--learning_rate",
+        type=float,
+        help="Learning rate for ADAM optimizer.",
+        default=1e-3,
+    )
 
     args = parser.parse_args()
 
@@ -30,7 +42,9 @@ if __name__ == "__main__":
         transform_list = [
             transforms.RandomHorizontalFlip(p=0.25),
             transforms.RandomVerticalFlip(p=0.25),
-            transforms.ColorJitter(contrast=0.1),
+            transforms.RandomRotation(
+                10, interpolation=transforms.InterpolationMode.BILINEAR
+            ),
         ]
     transform_list += [
         transforms.ToTensor(),
@@ -67,6 +81,8 @@ if __name__ == "__main__":
     experiment_name = args.experiment_name
     if args.use_data_augmentation:
         experiment_name += "-with-aug"
+    experiment_name += f"-LR{str(args.learning_rate)}"
+    experiment_name += f"-WD{str(args.weight_decay)}"
 
     logger = TensorBoardLogger(
         save_dir="./runs", name=experiment_name, default_hp_metric=False
@@ -82,7 +98,11 @@ if __name__ == "__main__":
 
     # Create the model and trainer
     num_classes = dataset.task_target.value
-    model = ResNet18Classifier(num_classes=num_classes)
+    model = ResNet18Classifier(
+        num_classes=num_classes,
+        learning_rate=args.learning_rate,
+        weight_decay=args.weight_decay,
+    )
     trainer = pl.Trainer(
         max_epochs=10000,
         log_every_n_steps=10,

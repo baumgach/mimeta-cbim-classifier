@@ -8,7 +8,7 @@ import torchmetrics
 
 
 class ResNet18Classifier(pl.LightningModule):
-    def __init__(self, num_classes, learning_rate=1e-3):
+    def __init__(self, num_classes, learning_rate=1e-3, weight_decay=0.0):
         super(ResNet18Classifier, self).__init__()
         self.resnet18 = models.resnet18(pretrained=True)
 
@@ -17,6 +17,7 @@ class ResNet18Classifier(pl.LightningModule):
         self.resnet18.fc = nn.Linear(num_features, num_classes)
 
         self.learning_rate = learning_rate
+        self.weight_decay = weight_decay
         self.criterion = nn.CrossEntropyLoss()
 
         self.num_classes = num_classes
@@ -91,16 +92,18 @@ class ResNet18Classifier(pl.LightningModule):
         self.test_outputs.append(torch.argmax(logits, dim=1))
         self.test_labels.append(torch.argmax(y, dim=1))
 
-    def on_test_epoch_end(self):
-        all_preds = torch.cat(self.test_outputs)
-        all_labels = torch.cat(self.test_labels)
+    # def on_test_epoch_end(self):
+    #     all_preds = torch.cat(self.test_outputs)
+    #     all_labels = torch.cat(self.test_labels)
 
-        test_confusion_matrix = torchmetrics.classification.BinaryConfusionMatrix()
-        bcm = test_confusion_matrix(all_preds, all_labels)
+    #     test_confusion_matrix = torchmetrics.classification.BinaryConfusionMatrix()
+    #     bcm = test_confusion_matrix(all_preds, all_labels)
 
-        print("Confusion Matrix:")
-        print(bcm)
+    #     print("Confusion Matrix:")
+    #     print(bcm)
 
     def configure_optimizers(self):
-        optimizer = optim.Adam(self.parameters(), lr=self.learning_rate)
+        optimizer = optim.Adam(
+            self.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay
+        )
         return optimizer
