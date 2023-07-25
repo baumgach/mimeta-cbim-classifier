@@ -39,12 +39,20 @@ if __name__ == "__main__":
 
     transform_list = []
     if args.use_data_augmentation:
+        random_crop_and_resize = transforms.Compose(
+            [
+                transforms.RandomCrop(200),
+                transforms.Resize(224),
+            ]
+        )
+
         transform_list = [
             transforms.RandomHorizontalFlip(p=0.25),
             transforms.RandomVerticalFlip(p=0.25),
             transforms.RandomRotation(
                 10, interpolation=transforms.InterpolationMode.BILINEAR
             ),
+            transforms.RandomApply([random_crop_and_resize], p=0.25),
         ]
     transform_list += [
         transforms.ToTensor(),
