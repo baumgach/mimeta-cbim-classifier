@@ -67,8 +67,6 @@ if __name__ == "__main__":
         checkpoint_path=latest_checkpoint,
     )
 
-    model.eval()
-
     trainer = pl.Trainer()
 
     # test the model
