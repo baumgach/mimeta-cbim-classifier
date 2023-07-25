@@ -32,7 +32,7 @@ if __name__ == "__main__":
         "--learning_rate",
         type=float,
         help="Learning rate for ADAM optimizer.",
-        default=1e-3,
+        default=1e-4,
     )
 
     args = parser.parse_args()

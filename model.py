@@ -8,7 +8,7 @@ import torchmetrics
 
 
 class ResNet18Classifier(pl.LightningModule):
-    def __init__(self, num_classes, learning_rate=1e-3, weight_decay=0.0):
+    def __init__(self, num_classes, learning_rate=1e-4, weight_decay=0.0):
         super(ResNet18Classifier, self).__init__()
         self.resnet18 = models.resnet18(pretrained=True)
 
