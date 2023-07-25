@@ -94,6 +94,11 @@ if __name__ == "__main__":
             filename="best-auc-{epoch}-{step}",
             mode="max",
         ),
+        ModelCheckpoint(
+            monitor="valid/loss_epoch",
+            filename="best-loss-{epoch}-{step}",
+            mode="min",
+        ),
     ]
 
     # Create the model and trainer
@@ -104,7 +109,7 @@ if __name__ == "__main__":
         weight_decay=args.weight_decay,
     )
     trainer = pl.Trainer(
-        max_epochs=10000,
+        max_epochs=1000,
         log_every_n_steps=10,
         val_check_interval=0.25,
         logger=logger,

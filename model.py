@@ -53,7 +53,7 @@ class ResNet18Classifier(pl.LightningModule):
 
         y = F.one_hot(y.squeeze(), num_classes=self.num_classes).type(torch.float32)
         loss = self.criterion(logits, y)
-        self.log("train/loss_step", loss)
+        self.log("train/loss", loss, on_step=True, on_epoch=True)
 
         self.train_acc(logits, y)
         self.log("train/acc", self.train_acc, on_step=True, on_epoch=True)
@@ -69,7 +69,7 @@ class ResNet18Classifier(pl.LightningModule):
 
         logits = self(x)
         loss = self.criterion(logits, y)
-        self.log("valid/loss_step", loss)
+        self.log("valid/loss", loss, on_step=True, on_epoch=True)
 
         self.valid_acc(logits, y)
         self.log("valid/acc", self.valid_acc, on_step=True, on_epoch=True)
